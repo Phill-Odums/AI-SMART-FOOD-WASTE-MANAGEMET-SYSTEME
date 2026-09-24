@@ -1,0 +1,1 @@
+"""Sales records application package."""

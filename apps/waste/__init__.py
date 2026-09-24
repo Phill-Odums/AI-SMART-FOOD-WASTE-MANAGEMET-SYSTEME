@@ -1,0 +1,1 @@
+"""Waste tracking application package."""
