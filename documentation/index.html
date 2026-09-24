@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Food-Waste Reduction Framework — Documentation</title>
+  <style>
+    :root {
+      --primary: #1B365D;
+      --primary-dark: #0f223d;
+      --primary-light: #2a528a;
+      --accent: #2563EB;
+      --accent-light: #EFF6FF;
+      --success: #059669;
+      --success-light: #ECFDF5;
+      --warning: #D97706;
+      --warning-light: #FFFBEB;
+      --danger: #DC2626;
+      --text: #1E293B;
+      --text-muted: #64748B;
+      --bg: #F8FAFC;
+      --surface: #FFFFFF;
+      --border: #E2E8F0;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+      color: white;
+      padding: 2.5rem 2rem 2rem;
+      border-bottom: 4px solid var(--accent);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .header-content {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .header-title h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .header-title p {
+      color: #94A3B8;
+      font-size: 0.95rem;
+      margin-top: 0.25rem;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: none;
+    }
+
+    .btn-print {
+      background: white;
+      color: var(--primary);
+    }
+
+    .btn-print:hover {
+      background: #F1F5F9;
+      transform: translateY(-1px);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-primary { background: #DBEAFE; color: #1E40AF; }
+    .badge-success { background: #D1FAE5; color: #065F46; }
+    .badge-warning { background: #FEF3C7; color: #92400E; }
+
+    /* Layout */
+    .container {
+      max-width: 1280px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 2rem;
+    }
+
+    /* Sidebar Navigation */
+    aside {
+      position: sticky;
+      top: 7rem;
+      height: fit-content;
+      max-height: calc(100vh - 8rem);
+      overflow-y: auto;
+      background: var(--surface);
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    aside h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    aside nav ul {
+      list-style: none;
+    }
+
+    aside nav li {
+      margin-bottom: 0.5rem;
+    }
+
+    aside nav a {
+      display: block;
+      padding: 0.45rem 0.75rem;
+      border-radius: 6px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.15s ease;
+    }
+
+    aside nav a:hover {
+      background: var(--accent-light);
+      color: var(--accent);
+    }
+
+    /* Main Content */
+    main {
+      min-width: 0;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .card-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 2px solid #F1F5F9;
+      padding-bottom: 0.75rem;
+    }
+
+    .card-subtitle {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary-light);
+      margin: 1.5rem 0 0.75rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: #334155;
+    }
+
+    /* Callout Box */
+    .callout {
+      background: var(--accent-light);
+      border-left: 4px solid var(--accent);
+      padding: 1.25rem 1.5rem;
+      border-radius: 0 8px 8px 0;
+      margin: 1.5rem 0;
+    }
+
+    .callout h4 {
+      color: var(--primary);
+      font-size: 1rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .callout p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #1E3A8A;
+    }
+
+    /* Objectives Grid */
+    .objectives-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .objective-item {
+      padding: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #F8FAFC;
+      transition: transform 0.15s ease;
+    }
+
+    .objective-item:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .objective-item.highlight {
+      border-color: var(--accent);
+      background: #F0F7FF;
+    }
+
+    .objective-item .num {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+    }
+
+    .objective-item.highlight .num {
+      background: var(--accent);
+      color: white;
+    }
+
+    .objective-item h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.35rem;
+      color: var(--primary);
+    }
+
+    .objective-item p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    thead {
+      background: var(--primary);
+      color: white;
+    }
+
+    th {
+      padding: 0.85rem 1rem;
+      font-weight: 600;
+    }
+
+    td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: #334155;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #F8FAFC;
+    }
+
+    tbody tr:hover {
+      background: #F1F5F9;
+    }
+
+    /* Method Badges */
+    .method {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.75rem;
+      font-family: monospace;
+    }
+
+    .method-get { background: #DBEAFE; color: #1D4ED8; }
+    .method-post { background: #D1FAE5; color: #047857; }
+    .method-crud { background: #F3E8FF; color: #7E22CE; }
+
+    /* Local Features Cards */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .feature-card {
+      padding: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #FFFFFF;
+      box-shadow: var(--shadow);
+    }
+
+    .feature-card h4 {
+      font-size: 1rem;
+      color: var(--primary);
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .feature-card p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* Print Optimization */
+    @media print {
+      header {
+        position: static;
+        padding: 1.5rem 0;
+        border-bottom: 2px solid var(--primary);
+      }
+      .header-actions, aside {
+        display: none !important;
+      }
+      .container {
+        display: block;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      .card {
+        box-shadow: none;
+        border: 1px solid #CBD5E1;
+        page-break-inside: avoid;
+        margin-bottom: 1.5rem;
+        padding: 1.25rem;
+      }
+      body {
+        background: white;
+        color: black;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      aside {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header>
+    <div class="header-content">
+      <div class="header-title">
+        <h1>Smart Food-Waste Reduction Framework</h1>
+        <p>QSR Operations in South-East Nigeria · Technical Architecture & Master Plan</p>
+      </div>
+      <div class="header-actions">
+        <span class="badge badge-success">Django 5.x Ready</span>
+        <button class="btn btn-print" onclick="window.print()">
+          🖨️ Print / Save as PDF
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Left Navigation Sidebar -->
+    <aside>
+      <h3>Table of Contents</h3>
+      <nav>
+        <ul>
+          <li><a href="#summary">Executive Summary</a></li>
+          <li><a href="#objectives">1. Research Objectives</a></li>
+          <li><a href="#methodology">2. Phased Methodology</a></li>
+          <li><a href="#forecasting">3. AI Forecasting Engine</a></li>
+          <li><a href="#local-features">4. South-East Local Layer</a></li>
+          <li><a href="#software-architecture">5. Software Architecture</a></li>
+          <li><a href="#database-schema">6. Database Blueprint</a></li>
+          <li><a href="#swagger-api">7. Swagger UI API Map</a></li>
+          <li><a href="#roadmap">8. Implementation Roadmap</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Documentation Body -->
+    <main>
+      <!-- Section: Executive Summary -->
+      <section id="summary" class="card">
+        <h2 class="card-title">Executive Summary</h2>
+        <p>
+          This documentation details the complete architectural, algorithmic, and software blueprint for the 
+          <strong>Smart Food-Waste Reduction Framework</strong> tailored specifically to commercial Quick Service Restaurants (QSRs) 
+          operating across the South-East geo-political zone of Nigeria.
+        </p>
+        <p>
+          The system targets prominent chain brands including <strong>Crunchies Fried Chicken, Kilimanjaro Restaurant, and Chicken Republic</strong> 
+          across seven major South-East commercial centers: <em>Enugu, Awka, Owerri, Abakaliki, Umuahia, Onitsha, and Aba</em>.
+        </p>
+        <div class="callout">
+          <h4>Core Innovation</h4>
+          <p>
+            Eliminating kitchen overproduction by marrying pre-trained Time-Series Foundation Models 
+            (<strong>Amazon Chronos-Bolt</strong> & <strong>Google TimesFM</strong>) with a 
+            <strong>South-East Nigerian Local Feature Layer</strong> (Igbo market days, civil service paydays, and church surges) 
+            into a staggered prep batching engine.
+          </p>
+        </div>
+      </section>
+
+      <!-- Section: Objectives -->
+      <section id="objectives" class="card">
+        <h2 class="card-title">1. Research Objectives</h2>
+        <p>The study addresses six core objectives, with primary computational modeling focused on Objectives 3 & 4:</p>
+        
+        <div class="objectives-grid">
+          <div class="objective-item">
+            <span class="num">OBJECTIVE 1</span>
+            <h4>Quantification & Characterization</h4>
+            <p>Quantify edible food waste across operational stages: preparation, storage/spoilage, overproduction/buffet, and plate waste.</p>
+          </div>
+          <div class="objective-item">
+            <span class="num">OBJECTIVE 2</span>
+            <h4>Determinants Identification</h4>
+            <p>Identify operational, technological, behavioral, and economic determinants of waste in the study area.</p>
+          </div>
+          <div class="objective-item highlight">
+            <span class="num">OBJECTIVE 3 (AI MODELING)</span>
+            <h4>Effects of Smart Tech & Forecasting</h4>
+            <p>Examine the mathematical effects of smart technologies, demand forecasting, inventory management, and menu engineering.</p>
+          </div>
+          <div class="objective-item highlight">
+            <span class="num">OBJECTIVE 4 (SOFTWARE SYSTEM)</span>
+            <h4>Integrated Framework Development</h4>
+            <p>Develop an integrated smart food-waste reduction platform tailored to QSR kitchen workflows in South-East Nigeria.</p>
+          </div>
+          <div class="objective-item">
+            <span class="num">OBJECTIVE 5</span>
+            <h4>Quasi-Experimental Pilot</h4>
+            <p>Implement and validate the framework's effectiveness via an intervention pilot comparing Treatment vs Control branches.</p>
+          </div>
+          <div class="objective-item">
+            <span class="num">OBJECTIVE 6</span>
+            <h4>Policy & Scaling Guidelines</h4>
+            <p>Establish operational standard operating procedures (SOPs) and policy guidelines for scaling across Nigeria.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Methodology -->
+      <section id="methodology" class="card">
+        <h2 class="card-title">2. Phased Research Methodology</h2>
+        <p>The study adopts a mixed-methods design blending empirical waste measurements, econometric surveys, and AI software engineering:</p>
+        
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Phase</th>
+                <th>Core Activity</th>
+                <th>Target Deliverable</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Phase 1</strong></td>
+                <td>Direct physical waste weighing across shifts</td>
+                <td>Baseline volume (kg/day) and financial loss (₦/day)</td>
+              </tr>
+              <tr>
+                <td><strong>Phase 2</strong></td>
+                <td>Staff surveys and managerial qualitative interviews</td>
+                <td>Statistical determinants and behavioral root causes</td>
+              </tr>
+              <tr>
+                <td><strong>Phase 3</strong></td>
+                <td>Model formulation with Chronos-Bolt and TimesFM</td>
+                <td>Predictive algorithms & menu engineering matrix</td>
+              </tr>
+              <tr>
+                <td><strong>Phase 4</strong></td>
+                <td>Django REST Framework backend & Swagger UI</td>
+                <td>Functional backend with digital prep sheet API</td>
+              </tr>
+              <tr>
+                <td><strong>Phase 5</strong></td>
+                <td>Quasi-experimental field intervention (8-12 weeks)</td>
+                <td>Pre- vs. Post-intervention comparative waste reduction %</td>
+              </tr>
+              <tr>
+                <td><strong>Phase 6</strong></td>
+                <td>Synthesis of operational SOPs and policy briefs</td>
+                <td>Sector-wide scaling blueprint for hospitality boards</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section: AI Forecasting -->
+      <section id="forecasting" class="card">
+        <h2 class="card-title">3. AI Demand Forecasting Engine</h2>
+        <p>
+          Instead of training data-hungry neural networks from scratch, the system integrates two state-of-the-art 
+          <strong>Time-Series Foundation Models (TSFMs)</strong> in a dual-model weighted ensemble:
+        </p>
+        
+        <div class="features-grid">
+          <div class="feature-card">
+            <h4>⚡ Amazon Chronos-Bolt</h4>
+            <p>Tokenized language-model approach (T5). Excels at tracking erratic localized spikes, sudden volume swings, and daily non-linear fluctuations.</p>
+          </div>
+          <div class="feature-card">
+            <h4>🌐 Google TimesFM</h4>
+            <p>Decoder-only patch transformer trained on 100B+ points. Delivers remarkable baseline stability, seasonal rhythms, and robust trend extrapolation.</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <h4>Operational Rule: Disagreement-Based Staggered Batching</h4>
+          <p>
+            • <strong>High Agreement (Difference &lt; 8%):</strong> High confidence. Kitchen cooks the full quota in standard opening batches.<br>
+            • <strong>High Disagreement (Difference &ge; 8%):</strong> High volatility detected. The system automatically enforces a <strong>2-stage prep</strong>: cook 65% for the lunch rush, and prepare the remaining 35% on-demand during the afternoon. This stops overproduction waste.
+          </p>
+        </div>
+      </section>
+
+      <!-- Section: Local Features -->
+      <section id="local-features" class="card">
+        <h2 class="card-title">4. South-East Nigeria Local Feature Layer</h2>
+        <p>Global foundation models are calibrated with four essential regional operational drivers:</p>
+        
+        <div class="features-grid">
+          <div class="feature-card">
+            <h4>🏛️ Igbo Market Day Cycles</h4>
+            <p>4-day rotation (<strong>Eke, Oye, Afor, Nkwo</strong>) causing foot-traffic surges in major commercial hubs like Onitsha Main Market and Aba.</p>
+          </div>
+          <div class="feature-card">
+            <h4>💳 Salary / Payday Windows</h4>
+            <p>Pronounced dining surges during the 25th–31st of each month in administrative civil-service capitals (Enugu, Abakaliki, Awka).</p>
+          </div>
+          <div class="feature-card">
+            <h4>⛪ Sunday Church Surges</h4>
+            <p>Substantial lunch rushes between 12:30 PM and 3:30 PM on Sundays, alongside Saturday wedding catering peaks.</p>
+          </div>
+          <div class="feature-card">
+            <h4>🌧️ Rainy Season Disruptions</h4>
+            <p>Afternoon downpours that depress walk-in customer flow while triggering sudden spikes in deliveries and takeout.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section: Database Schema -->
+      <section id="database-schema" class="card">
+        <h2 class="card-title">5. Database Schema Blueprint</h2>
+        <p>The backend is powered by 13 relational tables mapping directly to the study's research objectives:</p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Table Name</th>
+                <th>Cluster</th>
+                <th>Purpose & Key Fields</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>RestaurantChain</code></td>
+                <td>Organization</td>
+                <td>Parent brand name, headquarters city (Crunchies, Kilimanjaro, etc.)</td>
+              </tr>
+              <tr>
+                <td><code>Branch</code></td>
+                <td>Organization</td>
+                <td>Name, city, state, standby generator flag, <strong>is_pilot_intervention</strong> (Treatment vs Control)</td>
+              </tr>
+              <tr>
+                <td><code>UserProfile</code></td>
+                <td>Accounts</td>
+                <td>User link, branch assignment, system roles (Cook, Storekeeper, Manager, Auditor)</td>
+              </tr>
+              <tr>
+                <td><code>Ingredient</code></td>
+                <td>Menu/Inventory</td>
+                <td>Raw item name, unit of measure, unit cost in Naira (₦), chilled and ambient shelf-life</td>
+              </tr>
+              <tr>
+                <td><code>MenuItem</code></td>
+                <td>Menu</td>
+                <td>Finished dish name, category (Rice, Protein, Sides), selling price in ₦</td>
+              </tr>
+              <tr>
+                <td><code>RecipeBOM</code></td>
+                <td>Menu</td>
+                <td>Bill of Materials: maps dish portions to raw ingredient quantities with shrinkage %</td>
+              </tr>
+              <tr>
+                <td><code>InventoryBatch</code></td>
+                <td>Inventory</td>
+                <td>Stock batch received, quantity remaining, expiry date (FEFO rotation order)</td>
+              </tr>
+              <tr>
+                <td><code>PowerOutageLog</code></td>
+                <td>Inventory</td>
+                <td>Records duration of electrical power/generator outages affecting refrigeration</td>
+              </tr>
+              <tr>
+                <td><code>LocalCalendarContext</code></td>
+                <td>Calendar</td>
+                <td>Date, city, traditional market day, payday window flag, weather condition</td>
+              </tr>
+              <tr>
+                <td><code>SalesRecord</code></td>
+                <td>Sales</td>
+                <td>POS transactions: branch, dish, sale date, shift, portions sold, gross revenue (₦)</td>
+              </tr>
+              <tr>
+                <td><code>DailyForecastItem</code></td>
+                <td>Forecasting</td>
+                <td>Chronos prediction, TimesFM prediction, ensemble forecast, batch recommendation</td>
+              </tr>
+              <tr>
+                <td><code>KitchenPrepTarget</code></td>
+                <td>Forecasting</td>
+                <td>Calculated raw ingredients (kg) to prepare per shift, actual used, variance</td>
+              </tr>
+              <tr>
+                <td><code>WasteLog</code></td>
+                <td>Waste</td>
+                <td>Disposal stage, menu item or raw ingredient, weight (kg), auto-calculated ₦ loss, root cause</td>
+              </tr>
+              <tr>
+                <td><code>MenuEngineeringSnapshot</code></td>
+                <td>Analytics</td>
+                <td>Dishes classified into Star, Plowhorse, Puzzle, Dog with operational recommendations</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section: Swagger API -->
+      <section id="swagger-api" class="card">
+        <h2 class="card-title">6. Interactive Swagger UI API Specification</h2>
+        <p>All endpoints are documented with OpenAPI 3.0 via <code>drf-spectacular</code> and testable at <code>/api/docs/</code>:</p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Method</th>
+                <th>Endpoint</th>
+                <th>Functional Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="method method-post">POST</span></td>
+                <td><code>/api/v1/auth/login/</code></td>
+                <td>Authenticate staff credentials and issue API token</td>
+              </tr>
+              <tr>
+                <td><span class="method method-get">GET</span></td>
+                <td><code>/api/v1/organization/branches/</code></td>
+                <td>List all QSR branches with city and pilot intervention tags</td>
+              </tr>
+              <tr>
+                <td><span class="method method-get">GET</span></td>
+                <td><code>/api/v1/menu/items/</code></td>
+                <td>Retrieve dishes with retail prices and Recipe BOM linkages</td>
+              </tr>
+              <tr>
+                <td><span class="method method-get">GET</span></td>
+                <td><code>/api/v1/calendar/today/?city=ONITSHA</code></td>
+                <td>Get today's Igbo market day, payday window, and weather</td>
+              </tr>
+              <tr>
+                <td><span class="method method-post">POST</span></td>
+                <td><code>/api/v1/waste/logs/</code></td>
+                <td>Log waste event (kg, stage, cause) with instant ₦ loss valuation</td>
+              </tr>
+              <tr>
+                <td><span class="method method-get">GET</span></td>
+                <td><code>/api/v1/waste/daily-summary/</code></td>
+                <td>Fetch shift waste totals and stage breakdown in Naira</td>
+              </tr>
+              <tr>
+                <td><span class="method method-post">POST</span></td>
+                <td><code>/api/v1/forecast/trigger/</code></td>
+                <td>Execute Chronos + TimesFM ensemble & generate kitchen prep targets</td>
+              </tr>
+              <tr>
+                <td><span class="method method-get">GET</span></td>
+                <td><code>/api/v1/forecast/prep-sheet/</code></td>
+                <td>Serve tomorrow's digital kitchen prep sheet to cooks</td>
+              </tr>
+              <tr>
+                <td><span class="method method-get">GET</span></td>
+                <td><code>/api/v1/analytics/menu-engineering/</code></td>
+                <td>Retrieve Star/Plowhorse/Puzzle/Dog menu profitability matrix</td>
+              </tr>
+              <tr>
+                <td><span class="method method-get">GET</span></td>
+                <td><code>/api/v1/analytics/pilot-comparison/</code></td>
+                <td>Compare Treatment vs Control branches for Phase 5 evaluation</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Section: Roadmap -->
+      <section id="roadmap" class="card">
+        <h2 class="card-title">7. Implementation Roadmap</h2>
+        <div class="callout">
+          <h4>Development & Verification Status</h4>
+          <p>
+            ✅ <strong>Milestone 1:</strong> Django project initialization & Swagger UI setup (Completed)<br>
+            ✅ <strong>Milestone 2:</strong> All 9 application modules & database models implemented (Completed)<br>
+            ⏳ <strong>Milestone 3:</strong> Database migration execution and sample data seeding (Ready to run)<br>
+            ⏳ <strong>Milestone 4:</strong> Model inference integration with Chronos-Bolt and Google TimesFM<br>
+            ⏳ <strong>Milestone 5:</strong> Quasi-experimental pilot deployment across South-East Nigeria
+          </p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+</body>
+</html>
+
