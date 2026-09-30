@@ -57,6 +57,7 @@ class ForecastRun(models.Model):
 
 class DailyForecastItem(models.Model):
     """Ensemble prediction and production batching recommendation for a specific menu item."""
+    
 
     class ConfidenceLevel(models.TextChoices):
         HIGH = 'high', 'High'

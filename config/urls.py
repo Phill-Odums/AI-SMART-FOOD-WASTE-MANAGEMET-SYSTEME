@@ -7,6 +7,7 @@ ReDoc is available at:      /api/redoc/
 
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularSwaggerView,
@@ -14,6 +15,9 @@ from drf_spectacular.views import (
 )
 
 urlpatterns = [
+    # Root redirects directly to interactive Swagger UI
+    path('', RedirectView.as_view(url='/api/docs/', permanent=False), name='root-redirect'),
+
     # Django Admin
     path('admin/', admin.site.urls),
 
