@@ -9,9 +9,7 @@ echo "==> Collecting static files..."
 python manage.py collectstatic --noinput
 
 echo "==> Ensuring superuser Admin exists..."
-python -c "
-import django
-django.setup()
+python manage.py shell -c "
 from django.contrib.auth import get_user_model
 from apps.accounts.models import UserProfile
 
