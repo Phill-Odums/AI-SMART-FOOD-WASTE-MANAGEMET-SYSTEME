@@ -1,7 +1,25 @@
 """Django Admin configuration for the AI Demand Forecasting application."""
 
+import csv
 from django.contrib import admin
+from django.http import HttpResponse
 from .models import DailyForecastItem, ForecastRun, KitchenPrepTarget
+
+
+def export_as_csv_action(description="Export selected to CSV"):
+    def export_as_csv(modeladmin, request, queryset):
+        opts = modeladmin.model._meta
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename="{opts.verbose_name_plural}.csv"'
+        writer = csv.writer(response)
+        field_names = [field.name for field in opts.fields]
+        writer.writerow(field_names)
+        for obj in queryset:
+            writer.writerow([getattr(obj, field) for field in field_names])
+        return response
+
+    export_as_csv.short_description = description
+    return export_as_csv
 
 
 class DailyForecastItemInline(admin.TabularInline):
@@ -37,6 +55,7 @@ class ForecastRunAdmin(admin.ModelAdmin):
     search_fields = ['branch__name', 'notes']
     date_hierarchy = 'forecast_target_date'
     inlines = [DailyForecastItemInline, KitchenPrepTargetInline]
+    actions = [export_as_csv_action("Export selected forecast runs to CSV")]
 
 
 @admin.register(DailyForecastItem)
@@ -55,6 +74,7 @@ class DailyForecastItemAdmin(admin.ModelAdmin):
     ]
     list_filter = ['confidence_level', 'recommended_prep_strategy', 'forecast_run__branch']
     search_fields = ['menu_item__name', 'forecast_run__branch__name']
+    actions = [export_as_csv_action("Export selected forecast items to CSV")]
 
 
 @admin.register(KitchenPrepTarget)
@@ -68,3 +88,4 @@ class KitchenPrepTargetAdmin(admin.ModelAdmin):
     ]
     list_filter = ['forecast_run__branch', 'ingredient']
     search_fields = ['ingredient__name', 'forecast_run__branch__name']
+    actions = [export_as_csv_action("Export selected prep targets to CSV")]
